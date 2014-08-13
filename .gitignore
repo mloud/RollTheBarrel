@@ -1,0 +1,8 @@
+#Ignore these directories
+Library
+Temp
+
+#ignore these files
+*.userprefs
+*.csproj
+*.sln
