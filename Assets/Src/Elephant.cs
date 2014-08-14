@@ -3,9 +3,11 @@ using System.Collections;
 
 public class Elephant : MonoBehaviour
 {
-
 	[SerializeField]
 	Transform barrel;
+
+	[SerializeField]
+	Player player;
 
 	private Vector3 barrelShift;
 
@@ -28,5 +30,11 @@ public class Elephant : MonoBehaviour
 
 			transform.localScale = localScale;
 		}
+	}
+
+
+	void OnTriggerEnter(Collider collider)
+	{
+		player.OnColliderHit(collider);
 	}
 }

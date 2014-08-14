@@ -1,7 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Game : MonoBehaviour
+
+public interface IGame
+{
+	void Restart();
+
+	void OnBonusCollision(Bonus bonus);
+
+}
+
+public class Game : MonoBehaviour, IGame
 {
 	[SerializeField]
 	Transform sceneRoot;
@@ -22,6 +31,7 @@ public class Game : MonoBehaviour
 	public Player Player { get; private set; }
 	public ParallaxController Parallax { private get; set; }
 	public InputController InputController { private set; get; }
+	public LevelStatistic LevelStatistic { private set; get; }
 
 	private static Game _instance;
 
@@ -52,12 +62,17 @@ public class Game : MonoBehaviour
 
 	}
 
+	public void Restart()
+	{
+		Application.LoadLevel(Application.loadedLevel);
+	}
+
+
 	void Awake()
 	{
 		_instance = this;
 
 		Init ();
-
 	}
 
 	void Init()
@@ -67,6 +82,9 @@ public class Game : MonoBehaviour
 		// Find Parallax 
 		Parallax = GameObject.FindObjectOfType<ParallaxController>();
 
+		// Create Level Statistic
+		LevelStatistic = new LevelStatistic();
+
 		// Create InputController
 		GameObject inputControllerGo = new GameObject("__InputController__");
 		inputControllerGo.transform.parent = transform;
@@ -74,7 +92,9 @@ public class Game : MonoBehaviour
 	}
 
 	void Start ()
-	{}
+	{
+		LevelStatistic.StartTime = Time.time;
+	}
 	
 	void Update ()
 	{
@@ -101,7 +121,13 @@ public class Game : MonoBehaviour
 		//paralax
 		Vector2 speed = Player.Speed();
 		Parallax.SetPlayerSpeed(speed);
+	}
 
+
+	public void OnBonusCollision(Bonus bonus)
+	{
+		bonus.FlyUp();
+		LevelStatistic.CollectedBonus++;
 	}
 
 
