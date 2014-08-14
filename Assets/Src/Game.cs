@@ -57,6 +57,16 @@ public class Game : MonoBehaviour
 
 		Player = GameObject.FindObjectOfType<Player>();
 		Parallax = GameObject.FindObjectOfType<ParallaxController>();
+
+		Init ();
+
+	}
+
+	void Init()
+	{
+		GameObject inputController = new GameObject("__InputController__");
+		inputController.transform.parent = transform;
+		inputController.AddComponent<InputController>();
 	}
 
 	void Start ()
