@@ -48,7 +48,7 @@ public class Game : MonoBehaviour, IGame
 	public void RotateScene(Const.Direction dir)
 	{
 		_resetingRotation = false;
-		_rotationSpeed = (dir == Const.Direction.Right ? -1 : 1) * rotationSpeed;
+		_rotationSpeed = (dir == Const.Direction.Right ? 1 : -1) * rotationSpeed;
 	}
 
 	public void ResetRotation()
