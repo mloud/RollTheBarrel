@@ -3,25 +3,41 @@ using System.Collections;
 
 public class InputController : MonoBehaviour 
 {
+	public void RotateLeft()
+	{
+		Game.Instance.RotateScene(Const.Direction.Left);
+	}
+	
+	public void RotateRight()
+	{
+		Game.Instance.RotateScene(Const.Direction.Right);
+	}
+	
+	public void ResetRotation()
+	{
+		Game.Instance.ResetRotation();
+	}
+
 	void Update () 
 	{
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
-			Game.Instance.RotateScene(+1);
+			RotateLeft();
 		}
 		else if (Input.GetKeyUp(KeyCode.LeftArrow))
 		{
-			Game.Instance.ResetRotation();
+			ResetRotation();
 		}
 
 
 		if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
-			Game.Instance.RotateScene(-1);
+			RotateRight();
 		}
 		else if (Input.GetKeyUp(KeyCode.RightArrow))
 		{
-			Game.Instance.ResetRotation();
+			ResetRotation();
 		}
 	}
+
 }

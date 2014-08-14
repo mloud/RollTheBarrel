@@ -21,6 +21,7 @@ public class Game : MonoBehaviour
 
 	public Player Player { get; private set; }
 	public ParallaxController Parallax { private get; set; }
+	public InputController InputController { private set; get; }
 
 	private static Game _instance;
 
@@ -29,10 +30,10 @@ public class Game : MonoBehaviour
 	private bool _resetingRotation;
 
 
-	public void RotateScene(int dir)
+	public void RotateScene(Const.Direction dir)
 	{
 		_resetingRotation = false;
-		_rotationSpeed = dir * rotationSpeed;
+		_rotationSpeed = (dir == Const.Direction.Right ? -1 : 1) * rotationSpeed;
 	}
 
 	public void ResetRotation()
@@ -55,24 +56,25 @@ public class Game : MonoBehaviour
 	{
 		_instance = this;
 
-		Player = GameObject.FindObjectOfType<Player>();
-		Parallax = GameObject.FindObjectOfType<ParallaxController>();
-
 		Init ();
 
 	}
 
 	void Init()
 	{
-		GameObject inputController = new GameObject("__InputController__");
-		inputController.transform.parent = transform;
-		inputController.AddComponent<InputController>();
+		// Find Player 
+		Player = GameObject.FindObjectOfType<Player>();
+		// Find Parallax 
+		Parallax = GameObject.FindObjectOfType<ParallaxController>();
+
+		// Create InputController
+		GameObject inputControllerGo = new GameObject("__InputController__");
+		inputControllerGo.transform.parent = transform;
+		InputController = inputControllerGo.AddComponent<InputController>();
 	}
 
 	void Start ()
-	{
-	
-	}
+	{}
 	
 	void Update ()
 	{
@@ -99,7 +101,6 @@ public class Game : MonoBehaviour
 		//paralax
 		Vector2 speed = Player.Speed();
 		Parallax.SetPlayerSpeed(speed);
-
 
 	}
 

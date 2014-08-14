@@ -4,14 +4,8 @@ using System.Collections;
 public class Arrow : MonoBehaviour 
 {
 
-	public enum Type
-	{
-		Left,
-		Right
-	}
-
 	[SerializeField]
-	Type type;
+	Const.Direction direction;
 
 
 
@@ -27,22 +21,22 @@ public class Arrow : MonoBehaviour
 
 	void OnMouseDown()
 	{
-		Debug.Log ("Arrow.OnMouseDown() " + type.ToString());
+		Debug.Log ("Arrow.OnMouseDown() " + direction.ToString());
 	
-		if (type == Type.Left)
+		if (direction == Const.Direction.Left)
 		{
-			Game.Instance.RotateScene(+1);
+			Game.Instance.InputController.RotateLeft();
 		}
 		else
 		{
-			Game.Instance.RotateScene(-1);
+			Game.Instance.InputController.RotateRight();
 		}
 	}
 
 	void OnMouseUp()
 	{
-		Debug.Log ("Arrow.OnMouseUp() " + type.ToString());
+		Debug.Log ("Arrow.OnMouseUp() " + direction.ToString());
 
-		Game.Instance.ResetRotation();
+		Game.Instance.InputController.ResetRotation();
 	}
 }
