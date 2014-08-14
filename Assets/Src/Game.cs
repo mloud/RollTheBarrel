@@ -19,6 +19,9 @@ public class Game : MonoBehaviour
 
 	public static Game Instance { get { return _instance; } }
 
+	public Player Player { get; private set; }
+	public ParallaxController Parallax { private get; set; }
+
 	private static Game _instance;
 
 	private float? _rotationSpeed;
@@ -51,6 +54,9 @@ public class Game : MonoBehaviour
 	void Awake()
 	{
 		_instance = this;
+
+		Player = GameObject.FindObjectOfType<Player>();
+		Parallax = GameObject.FindObjectOfType<ParallaxController>();
 	}
 
 	void Start ()
@@ -61,6 +67,7 @@ public class Game : MonoBehaviour
 	void Update ()
 	{
 
+		// titlting
 		if (_rotationSpeed != null)
 		{
 
@@ -79,6 +86,9 @@ public class Game : MonoBehaviour
 
 		}
 
+		//paralax
+		Vector2 speed = Player.Speed();
+		Parallax.SetPlayerSpeed(speed);
 
 
 	}
