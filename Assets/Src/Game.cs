@@ -7,6 +7,7 @@ public interface IGame
 	void Restart();
 
 	void OnBonusCollision(Bonus bonus);
+	void OnGameFinished();
 
 }
 
@@ -128,6 +129,11 @@ public class Game : MonoBehaviour, IGame
 	{
 		bonus.FlyUp();
 		LevelStatistic.CollectedBonus++;
+	}
+
+	public void OnGameFinished()
+	{
+	
 	}
 
 

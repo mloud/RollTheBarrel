@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
 		{
 			Game.Instance.OnBonusCollision(collider.gameObject.GetComponent<Bonus>());
 		}
+		else if (collider.tag == "Finish")
+		{
+			Game.Instance.OnGameFinished();
+		}
 	}
 
 	void Start ()
