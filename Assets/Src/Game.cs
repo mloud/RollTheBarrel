@@ -8,6 +8,8 @@ public interface IGame
 
 	void OnBonusCollision(Bonus bonus);
 	void OnGameFinished();
+	void Pause();
+	void UnPause();
 
 }
 
@@ -29,10 +31,12 @@ public class Game : MonoBehaviour, IGame
 
 	public static Game Instance { get { return _instance; } }
 
+	public UI UI { get; private set; }
 	public Player Player { get; private set; }
 	public ParallaxController Parallax { private get; set; }
 	public InputController InputController { private set; get; }
 	public LevelStatistic LevelStatistic { private set; get; }
+
 
 	private static Game _instance;
 
@@ -68,6 +72,15 @@ public class Game : MonoBehaviour, IGame
 		Application.LoadLevel(Application.loadedLevel);
 	}
 
+	public void Pause()
+	{
+		Time.timeScale = 0;
+	}
+
+	public void UnPause()
+	{
+		Time.timeScale = 1.0f;
+	}
 
 	void Awake()
 	{
@@ -82,6 +95,8 @@ public class Game : MonoBehaviour, IGame
 		Player = GameObject.FindObjectOfType<Player>();
 		// Find Parallax 
 		Parallax = GameObject.FindObjectOfType<ParallaxController>();
+		// Find UI
+		UI = GameObject.FindObjectOfType<UI>();
 
 		// Create Level Statistic
 		LevelStatistic = new LevelStatistic();
@@ -94,6 +109,7 @@ public class Game : MonoBehaviour, IGame
 
 	void Start ()
 	{
+		UnPause();
 		LevelStatistic.StartTime = Time.time;
 	}
 	
@@ -133,7 +149,8 @@ public class Game : MonoBehaviour, IGame
 
 	public void OnGameFinished()
 	{
-	
+		Pause();
+		UI.ShowDialog("DialogGameFinish");
 	}
 
 
