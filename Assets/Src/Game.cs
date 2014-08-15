@@ -115,6 +115,11 @@ public class Game : MonoBehaviour, IGame
 	
 	void Update ()
 	{
+		// keep gravity
+		float gravityMag = Physics.gravity.magnitude;
+		Physics.gravity = -Camera.main.transform.up * gravityMag;
+
+	
 
 		// titlting
 		if (_rotationSpeed != null)

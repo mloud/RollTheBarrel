@@ -13,6 +13,7 @@ public class Elephant : MonoBehaviour
 
 	void Start ()
 	{
+		// shift abobe barrel
 		barrelShift = transform.position - barrel.position;
 	}
 	
@@ -30,6 +31,10 @@ public class Elephant : MonoBehaviour
 
 			transform.localScale = localScale;
 		}
+
+		// rotate to follow gravity vector
+
+		transform.rotation = Camera.main.transform.rotation;
 	}
 
 
