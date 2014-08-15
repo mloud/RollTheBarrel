@@ -26,6 +26,10 @@ public class Player : MonoBehaviour
 		{
 			Game.Instance.OnGameFinished();
 		}
+		else if (collider.tag == "Obstacle")
+		{
+			Game.Instance.OnGameFinished();
+		}
 	}
 
 	void Start ()
