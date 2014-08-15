@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 
 public class Player : MonoBehaviour 
@@ -9,6 +9,17 @@ public class Player : MonoBehaviour
 
 	[SerializeField]
 	Elephant elephant;
+
+	[SerializeField]
+	Transform mouthTr;
+
+
+	private List<CollectibleBase> CollectibleList { get; set; }
+
+	void Awake()
+	{
+		CollectibleList = new List<CollectibleBase>();
+	}
 
 	public Vector2 Speed()
 	{
@@ -30,6 +41,21 @@ public class Player : MonoBehaviour
 		{
 			Game.Instance.OnGameFinished();
 		}
+		else if (collider.tag == "Collectible")
+		{
+			CollectibleBase colectible = collider.gameObject.GetComponent<Collectible>();
+
+			if (colectible.CanCollect())
+			{
+				colectible.Collect(mouthTr);
+			}
+		}
+
+	}
+
+	public void OnColliderExit(Collider collider)
+	{
+
 	}
 
 	void Start ()

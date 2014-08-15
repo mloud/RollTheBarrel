@@ -152,6 +152,12 @@ public class Game : MonoBehaviour, IGame
 		LevelStatistic.CollectedBonus++;
 	}
 
+	public void OnCollectibleCollision(CollectibleBase collectible)
+	{
+		//LevelStatistic.CollectedBonus++;
+		Destroy(collectible.gameObject);
+	}
+
 	public void OnGameFinished()
 	{
 		Pause();

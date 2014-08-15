@@ -7,6 +7,15 @@ public class Elephant : MonoBehaviour
 	Transform barrel;
 
 	[SerializeField]
+	Transform trunk;
+
+	[SerializeField]
+	Transform trunkCenter;
+
+
+
+
+	[SerializeField]
 	Player player;
 
 	private Vector3 barrelShift;
@@ -35,6 +44,14 @@ public class Elephant : MonoBehaviour
 		// rotate to follow gravity vector
 
 		transform.rotation = Camera.main.transform.rotation;
+
+
+		trunk.position = trunkCenter.position;
+		trunk.rotation = trunkCenter.rotation;
+		trunk.localScale = trunkCenter.lossyScale;
+
+
+
 	}
 
 
