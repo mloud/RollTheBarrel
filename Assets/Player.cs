@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	Transform ropeStartTr;
 
+	[SerializeField]
+	PolyMesh polyMesh;
 
 	private List<Act.Action> Actions { get; set; }
 
@@ -45,6 +47,17 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
+
+#if UNITY_EDITOR
+	public float GetTrunkSize()
+	{
+		Vector3 center = polyMesh.keyPoints[0] + (polyMesh.keyPoints[1] - polyMesh.keyPoints[0]) * 0.5f;
+
+		return (center - polyMesh.keyPoints[2]).magnitude;
+	}
+#endif
+
+
 
 	public Vector2 Position()
 	{
@@ -181,8 +194,9 @@ public class Player : MonoBehaviour
 			}
 	
 		}
-		
 	}
+
+
 
 
 }
