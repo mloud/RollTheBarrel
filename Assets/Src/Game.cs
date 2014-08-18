@@ -169,13 +169,12 @@ public class Game : MonoBehaviour, IGame
 	public void OnBonusCollision(Bonus bonus)
 	{
 		bonus.FlyUp();
-		LevelStatistic.CollectedBonus++;
+		LevelStatistic.Bonus++;
 	}
 
 	public void OnCollectibleCollision(CollectibleBase collectible)
 	{
-		//LevelStatistic.CollectedBonus++;
-		Destroy(collectible.gameObject);
+		LevelStatistic.Collectibles++;
 	}
 
 	public void OnGameFinished()

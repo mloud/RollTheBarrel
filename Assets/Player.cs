@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
 			if (colectible.CanCollect())
 			{
 				colectible.Collect(mouthTr);
+				Game.Instance.OnCollectibleCollision(colectible);
 			}
 		}
 		else if (collider.tag == "Hook")

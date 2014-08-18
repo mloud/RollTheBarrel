@@ -6,7 +6,9 @@ using System;
 public class LevelStatistic
 {
 	public float StartTime { get; set; }
-	public float CollectedBonus { get; set; }
+	public float Bonus { get; set; }
+	public float Collectibles { get; set; }
+
 	public float Distance { get; set; }
 	public float TotalDistance { get; set; }
 

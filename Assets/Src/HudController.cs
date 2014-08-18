@@ -5,10 +5,14 @@ public class HudController : MonoBehaviour
 {
 	[SerializeField]
 	TextMesh txtTime;
-
 	
 	[SerializeField]
 	TextMesh txtBonus;
+
+	[SerializeField]
+	TextMesh txtCollectible;
+
+
 
 	void Start () 
 	{
@@ -19,6 +23,7 @@ public class HudController : MonoBehaviour
 	void Update ()
 	{
 		txtTime.text = Game.Instance.LevelStatistic.GetDurationFormated();
-		txtBonus.text = Game.Instance.LevelStatistic.CollectedBonus.ToString();
+		txtBonus.text = Game.Instance.LevelStatistic.Bonus.ToString();
+		txtCollectible.text = Game.Instance.LevelStatistic.Collectibles.ToString();
 	}
 }
