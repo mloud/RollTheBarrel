@@ -3,6 +3,9 @@ using System.Collections;
 
 public abstract class CollectibleBase : MonoBehaviour 
 {
+	[SerializeField]
+	protected Animator animator;
+
 
 	public enum State
 	{

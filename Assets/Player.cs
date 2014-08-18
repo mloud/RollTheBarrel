@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 	Transform ropeStartTr;
 
 	[SerializeField]
-	PolyMesh polyMesh;
+	SphereCollider trunkSphereCollider;
 
 	private List<Act.Action> Actions { get; set; }
 
@@ -51,9 +51,10 @@ public class Player : MonoBehaviour
 #if UNITY_EDITOR
 	public float GetTrunkSize()
 	{
-		Vector3 center = polyMesh.keyPoints[0] + (polyMesh.keyPoints[1] - polyMesh.keyPoints[0]) * 0.5f;
+		//Vector3 center = polyMesh.keyPoints[0] + (polyMesh.keyPoints[1] - polyMesh.keyPoints[0]) * 0.5f;
 
-		return (center - polyMesh.keyPoints[2]).magnitude;
+		//return (center - polyMesh.keyPoints[2]).magnitude;
+		return trunkSphereCollider.radius * 2;
 	}
 #endif
 

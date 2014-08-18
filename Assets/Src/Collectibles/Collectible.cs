@@ -23,7 +23,7 @@ public class Collectible : CollectibleBase
 	{
 		if (CurrentState == State.Collecting)
 		{
-			transform.position = Vector3.Lerp(transform.position, CollectTo.position, Time.deltaTime * 20.0f);
+			transform.position = Vector3.Lerp(transform.position, CollectTo.position, Time.deltaTime * 30.0f);
 
 			if ( (transform.position - CollectTo.position).sqrMagnitude < 1.0f * 1.0f)
 			{
