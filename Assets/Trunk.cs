@@ -8,17 +8,18 @@ public class Trunk : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider)
 	{
-		if (collider.gameObject.tag == "Collectible")
+		if (collider.gameObject.tag == "Collectible"|| collider.gameObject.tag == "Hook")
 		{
-			player.OnColliderHit(collider);
+			player.OnCustomTriggerEnter(collider);
 		}
 	}
 
 	void OnTriggerExit(Collider collider)
 	{
-		if (collider.gameObject.tag == "Collectible")
+		Debug.Log ("Exit: " + collider.gameObject.name);
+		if (collider.gameObject.tag == "Collectible" || collider.gameObject.tag == "Hook")
 		{
-			player.OnColliderExit(collider);
+			player.OnCustomTriggerExit(collider);
 		}
 	}
 }

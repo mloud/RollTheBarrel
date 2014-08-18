@@ -18,8 +18,29 @@ public class InputController : MonoBehaviour
 		Game.Instance.ResetRotation();
 	}
 
+	public void DoAction()
+	{
+		Game.Instance.DoPlayerAction();
+	}
+
 	void Update () 
 	{
+
+#if UNITY_IPHONE || UNITY_ANDROID
+		for (int i = 0; i < Input.touchCount; ++i)
+		{
+			if (Input.touches[i].phase == TouchPhase.Began)
+			{
+				if (Input.touches[i].position.y > Screen.height * 0.5)
+				{
+					DoAction();
+				}
+				break;
+			}
+		}
+
+#endif
+
 		if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
 			RotateLeft();
@@ -29,6 +50,10 @@ public class InputController : MonoBehaviour
 			ResetRotation();
 		}
 
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			DoAction();
+		}
 
 		if (Input.GetKeyDown(KeyCode.RightArrow))
 		{

@@ -57,6 +57,7 @@ public class Elephant : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider)
 	{
-		player.OnColliderHit(collider);
+		player.OnCustomTriggerEnter(collider);
 	}
+
 }

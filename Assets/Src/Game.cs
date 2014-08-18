@@ -44,6 +44,10 @@ public class Game : MonoBehaviour, IGame
 
 	private bool _resetingRotation;
 
+	public void DoPlayerAction()
+	{
+		Player.DoAction();
+	}
 
 	public void RotateScene(Const.Direction dir)
 	{
@@ -126,6 +130,20 @@ public class Game : MonoBehaviour, IGame
 		{
 
 			sceneRoot.Rotate(0,0, _rotationSpeed.Value * Time.deltaTime * 10.0f);
+
+			float rotZ = sceneRoot.eulerAngles.z;
+
+			if (rotZ > 180)
+			{
+				rotZ = -(360 - rotZ);
+			}
+			if (rotZ > maxRotation || rotZ < -maxRotation)
+			{
+				rotZ = Mathf.Sign(rotZ) * maxRotation;
+				Vector3 eulerRot = sceneRoot.eulerAngles;
+				eulerRot.z = rotZ;
+				sceneRoot.eulerAngles = eulerRot;
+			}
 
 
 			// check for zero
