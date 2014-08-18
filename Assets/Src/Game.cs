@@ -7,7 +7,7 @@ public interface IGame
 	void Restart();
 
 	void OnBonusCollision(Bonus bonus);
-	void OnGameFinished();
+	void OnLevelFinished();
 	void Pause();
 	void UnPause();
 
@@ -177,10 +177,16 @@ public class Game : MonoBehaviour, IGame
 		LevelStatistic.Collectibles++;
 	}
 
-	public void OnGameFinished()
+	public void OnLevelFailed()
 	{
 		Pause();
-		UI.ShowDialog("DialogGameFinish");
+		UI.ShowDialog("DialogGameFinish", "Failed");
+	}
+
+	public void OnLevelFinished()
+	{
+		Pause();
+		UI.ShowDialog("DialogGameFinish", "Finished");
 	}
 
 

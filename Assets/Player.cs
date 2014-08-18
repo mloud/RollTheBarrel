@@ -66,11 +66,11 @@ public class Player : MonoBehaviour
 		}
 		else if (collider.tag == "Finish")
 		{
-			Game.Instance.OnGameFinished();
+			Game.Instance.OnLevelFinished();
 		}
 		else if (collider.tag == "Obstacle")
 		{
-			Game.Instance.OnGameFinished();
+			Game.Instance.OnLevelFailed();
 		}
 		else if (collider.tag == "Collectible")
 		{
@@ -177,7 +177,7 @@ public class Player : MonoBehaviour
 
 			if (hitParam > Game.Instance.HitParamGameOver)
 			{
-				Game.Instance.OnGameFinished();
+				Game.Instance.OnLevelFailed();
 			}
 	
 		}
