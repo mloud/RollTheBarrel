@@ -12,25 +12,56 @@ public class Hook : MonoBehaviour
 	[SerializeField]
 	public LineRenderer LineRenderer;
 
+	[SerializeField]
+	public GameObject ropePrefab;
+
+
+	private Transform Rope { get; set;} 
+
+
 	private Transform FromTr { get; set; }
 	private Transform ToTr { get; set; }
 
 
+	void Awake()
+	{
+		Rope = (Instantiate(ropePrefab) as GameObject).transform;
+		Rope.gameObject.SetActive(false);
+	}
 	public void InitRope(Transform fromTr)
 	{
 		LineRenderer.SetVertexCount(2);
 
 		FromTr = fromTr;
 		ToTr = transform;
+
+		Rope.gameObject.SetActive(true);
+
+		UpdateRope();
 	}
 
 	public void HideRope()
 	{
 		LineRenderer.SetVertexCount(0);
 		FromTr = null;
+		Rope.gameObject.SetActive(false);
 	}
 
+	private void UpdateRope()
+	{
+		if (FromTr != null)
+		{
+			Vector3 ropeScale = Rope.localScale;
+			ropeScale.y = (FromTr.position - ToTr.position).magnitude;
+			Rope.localScale =  ropeScale;
 
+			Vector3 ropePos = FromTr.position + (ToTr.position - FromTr.position) * 0.5f;
+			ropePos.z = transform.position.z + 0.01f;
+			Rope.transform.position = ropePos;
+
+			Rope.eulerAngles += Quaternion.FromToRotation(Rope.up, ToTr.position -  FromTr.position).eulerAngles;
+		}
+	}
 	
 	void Update ()
 	{
@@ -44,7 +75,11 @@ public class Hook : MonoBehaviour
 
 			LineRenderer.SetPosition(0, pos1);
 			LineRenderer.SetPosition(1, pos2);
+
+
 		}
+
+		UpdateRope();
 	}
 
 #if UNITY_EDITOR

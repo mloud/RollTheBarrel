@@ -60,16 +60,17 @@ namespace Act
 
 			Hook.InitRope(RopeStartTr);
 
+	
 			CurrentState = State.Swinging;
 
 		}
+
 
 		public override void Update()
 		{
 			if (CurrentState == State.Shifting)
 			{
 				RigidBody.velocity = (Hook.gameObject.transform.position - RigidBody.position).normalized * 30.0f;
-
 			}
 		
 		}
