@@ -130,7 +130,6 @@ public class Game : MonoBehaviour, IGame
 		Physics.gravity = -Camera.main.transform.up * gravity;
 
 	
-
 		// titlting
 		if (_rotationSpeed != null)
 		{

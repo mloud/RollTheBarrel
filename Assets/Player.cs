@@ -139,7 +139,8 @@ public class Player : MonoBehaviour
 			Actions[i].Update();
 		}
 
-
+		Actions.RemoveAll(x=> !x.IsActive && x.RemoveWhenFinished);
+		
 		 if (_contactPoint != null)
 		{
 			Debug.DrawRay(_contactPoint.Value.point, _contactPoint.Value.normal * 10, Color.white);
@@ -150,9 +151,18 @@ public class Player : MonoBehaviour
 	}
 
 
-	void RemoveAction(GameObject actionSubject)
+	private void RemoveAction(GameObject actionSubject)
 	{
+		for (int i = 0; i < Actions.Count; ++i)
+		{
+			if (Actions[i].IsActive)
+			{
+				Actions[i].RemoveWhenFinished = true;
+			}
+		}
+
 		Actions.RemoveAll(x=>x.ActionSubject == actionSubject && !x.IsActive);
+
 		Debug.Log("Player.RemoveAction() " + Actions.Count.ToString());
 
 	}

@@ -10,6 +10,8 @@ namespace Act
 
 		public bool IsActive { get; protected set; }
 
+		public bool RemoveWhenFinished { get; set; }
+
 		public abstract void Do();
 		public abstract void Stop();
 		public abstract void Update();
