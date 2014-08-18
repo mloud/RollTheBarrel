@@ -28,7 +28,12 @@ public class Game : MonoBehaviour, IGame
 	float maxRotation;
 
 	[SerializeField]
+	float gravity;
+
+	[SerializeField]
 	public float HitParamGameOver;
+
+
 
 
 	public static Game Instance { get { return _instance; } }
@@ -122,8 +127,7 @@ public class Game : MonoBehaviour, IGame
 	void Update ()
 	{
 		// keep gravity
-		float gravityMag = Physics.gravity.magnitude;
-		Physics.gravity = -Camera.main.transform.up * gravityMag;
+		Physics.gravity = -Camera.main.transform.up * gravity;
 
 	
 
