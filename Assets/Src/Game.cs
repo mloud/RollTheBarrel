@@ -27,6 +27,8 @@ public class Game : MonoBehaviour, IGame
 	[SerializeField]
 	float maxRotation;
 
+	[SerializeField]
+	public float HitParamGameOver;
 
 
 	public static Game Instance { get { return _instance; } }

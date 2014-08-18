@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
 #if UNITY_EDITOR
 	ContactPoint? _contactPoint;
+	Vector3 _speed;
 #endif
 
 	void Awake()
@@ -117,6 +118,7 @@ public class Player : MonoBehaviour
 	
 	void Update ()
 	{
+
 		for (int i = 0; i < Actions.Count; ++i)
 		{
 			Actions[i].Update();
@@ -126,6 +128,8 @@ public class Player : MonoBehaviour
 		 if (_contactPoint != null)
 		{
 			Debug.DrawRay(_contactPoint.Value.point, _contactPoint.Value.normal * 10, Color.white);
+			Debug.DrawRay(_contactPoint.Value.point, new Vector3(_speed.x, _speed.y,0) * 1, Color.yellow);
+
 		}
 
 	}
@@ -157,13 +161,26 @@ public class Player : MonoBehaviour
 		{
 			ContactPoint cp = collision.contacts[i];
 
-			//Debug.Log("this: " + cp.thisCollider.tag.ToString());
-			//Debug.Log("other: " + cp.otherCollider.tag.ToString());
 		
-			Debug.Log (Vector2.Dot(Speed().normalized, new Vector2(cp.normal.x,cp.normal.y).normalized).ToString());
+#if UNITY_EDITOR
+			_contactPoint = cp;
+			_speed = new Vector2(collision.relativeVelocity.x, collision.relativeVelocity.y);
+#endif
+
+			float dot = Vector2.Dot(collision.relativeVelocity.normalized, cp.normal.normalized);
+			float speedMag =  collision.relativeVelocity.magnitude;
+			float hitParam = dot * speedMag; 
+
+			Debug.Log("Terrain hit: dot = " + dot.ToString() + " speed = " + speedMag.ToString() + " hit param = " + hitParam.ToString());
+
+
+			if (hitParam > Game.Instance.HitParamGameOver)
+			{
+				Game.Instance.OnGameFinished();
+			}
+	
 		}
 		
-		//Debug.Log ("VEL: " + collision.relativeVelocity.magnitude.ToString());
 	}
 
 
