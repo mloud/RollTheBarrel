@@ -21,13 +21,15 @@ public class Player : MonoBehaviour
 
 	private List<Act.Action> Actions { get; set; }
 
-	public bool OnTheGround { get; set;}
+
 
 #if UNITY_EDITOR
 	ContactPoint? _contactPoint;
 	Vector3 _speed;
 	Vector3 _specialForce;
 #endif
+
+	private bool OnTerrain { get; set; }
 
 	void Awake()
 	{
@@ -74,6 +76,16 @@ public class Player : MonoBehaviour
 		return barrelRigidBody.velocity;
 	}
 
+	public bool OnTheGround()
+	{
+		if (OnTerrain)
+			return true;
+
+		if (Actions.Count > 0 && Actions[Actions.Count - 1].GetType() == typeof(Act.RopeAction))
+			return true;
+
+		return false;
+	}
 
 	public void OnCustomTriggerEnter(Collider collider)
 	{
@@ -105,10 +117,7 @@ public class Player : MonoBehaviour
 
 			AddAction(action);
 		}
-		else if (collider.tag == "Terrain")
-		{
 
-		}
 
 	}
 
@@ -124,7 +133,7 @@ public class Player : MonoBehaviour
 	{
 		if (collision.collider.gameObject.tag == "Terrain")
 		{
-			OnTheGround = true;
+			OnTerrain = true;
 			ResolveTerrainContact(collision);
 		}
 	}
@@ -133,7 +142,8 @@ public class Player : MonoBehaviour
 	{
 		if (collision.collider.gameObject.tag == "Terrain")
 		{
-			OnTheGround = false;
+			OnTerrain = false;
+
 		}
 	}
 
@@ -167,31 +177,21 @@ public class Player : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (OnTheGround)
+		// special force on the ground
+		if (OnTheGround())
 		{
 			_specialForce = Camera.main.transform.right * Mathf.Sign (Game.Instance.CameraZ);
 			float forceMag =  Mathf.Abs(Game.Instance.CameraZ) / Game.Instance.maxRotation;
 			_specialForce *= forceMag * Game.Instance.specialForceMax;
-			barrelRigidBody.AddForce(_specialForce);
-
-			barrelRigidBody.drag = 0;
-
-			Debug.Log ("Applying " + _specialForce.magnitude);
+			barrelRigidBody.AddForce(_specialForce, ForceMode.Force);
 		}
+		// wind force in the air
 		else
 		{
-//			//simulate ait resitance
-//			Vector3 vel = barrelRigidBody.velocity;
-//			vel.x *= 0.9f;
-//
-//			barrelRigidBody.velocity = vel;
-
-
 			if (Mathf.Abs(barrelRigidBody.velocity.x) > 3)
 			{
 				_specialForce = new Vector3(-Mathf.Sign(barrelRigidBody.velocity.x) * Game.Instance.specialAirForce, 0,0);
 				barrelRigidBody.AddForce(_specialForce);
-				Debug.Log ("NOT Applying ");
 			}
 		}
 	}
