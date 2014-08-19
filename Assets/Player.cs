@@ -144,6 +144,10 @@ public class Player : MonoBehaviour
 		{
 			OnTerrain = true;
 		}
+		else if (collision.collider.gameObject.tag == "Obstacle")
+		{
+			Game.Instance.OnLevelFailed();
+		}
 	}
 
 	public void OnCustomCollisionExit(Collision collision)
