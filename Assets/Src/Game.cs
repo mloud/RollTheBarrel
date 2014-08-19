@@ -25,14 +25,20 @@ public class Game : MonoBehaviour, IGame
 	float rotationSpeed;
 
 	[SerializeField]
-	float maxRotation;
+	public float maxRotation;
+
+	[SerializeField]
+	public float specialForceMax;
+
+	[SerializeField]
+	public float specialAirForce;
+
 
 	[SerializeField]
 	float gravity;
 
 	[SerializeField]
 	public float HitParamGameOver;
-
 
 
 
@@ -43,7 +49,7 @@ public class Game : MonoBehaviour, IGame
 	public ParallaxController Parallax { private get; set; }
 	public InputController InputController { private set; get; }
 	public LevelStatistic LevelStatistic { private set; get; }
-
+	public float CameraZ { get; set;} 
 
 	private static Game _instance;
 
@@ -129,28 +135,37 @@ public class Game : MonoBehaviour, IGame
 		// keep gravity
 		Physics.gravity = -Camera.main.transform.up * gravity;
 
-	
+		UpdateCameraRotation();
+
+
+		//paralax
+		Vector2 speed = Player.Speed();
+		Parallax.SetPlayerSpeed(speed);
+	}
+
+	private void UpdateCameraRotation()
+	{
 		// titlting
 		if (_rotationSpeed != null)
 		{
-
+			
 			sceneRoot.Rotate(0,0, _rotationSpeed.Value * Time.deltaTime * 10.0f);
-
-			float rotZ = sceneRoot.eulerAngles.z;
-
-			if (rotZ > 180)
+			
+			CameraZ = sceneRoot.eulerAngles.z;
+			
+			if (CameraZ > 180)
 			{
-				rotZ = -(360 - rotZ);
+				CameraZ = -(360 - CameraZ);
 			}
-			if (rotZ > maxRotation || rotZ < -maxRotation)
+			if (CameraZ > maxRotation || CameraZ < -maxRotation)
 			{
-				rotZ = Mathf.Sign(rotZ) * maxRotation;
+				CameraZ = Mathf.Sign(CameraZ) * maxRotation;
 				Vector3 eulerRot = sceneRoot.eulerAngles;
-				eulerRot.z = rotZ;
+				eulerRot.z = CameraZ;
 				sceneRoot.eulerAngles = eulerRot;
 			}
-
-
+			
+			
 			// check for zero
 			if (_resetingRotation)
 			{
@@ -160,14 +175,9 @@ public class Game : MonoBehaviour, IGame
 					_resetingRotation = false;
 				}
 			}
-
+			
 		}
-
-		//paralax
-		Vector2 speed = Player.Speed();
-		Parallax.SetPlayerSpeed(speed);
 	}
-
 
 	public void OnBonusCollision(Bonus bonus)
 	{

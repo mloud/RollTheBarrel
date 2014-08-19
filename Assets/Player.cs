@@ -21,9 +21,12 @@ public class Player : MonoBehaviour
 
 	private List<Act.Action> Actions { get; set; }
 
+	public bool OnTheGround { get; set;}
+
 #if UNITY_EDITOR
 	ContactPoint? _contactPoint;
 	Vector3 _speed;
+	Vector3 _specialForce;
 #endif
 
 	void Awake()
@@ -121,10 +124,18 @@ public class Player : MonoBehaviour
 	{
 		if (collision.collider.gameObject.tag == "Terrain")
 		{
+			OnTheGround = true;
 			ResolveTerrainContact(collision);
 		}
 	}
 
+	public void OnCustomCollisionExit(Collision collision)
+	{
+		if (collision.collider.gameObject.tag == "Terrain")
+		{
+			OnTheGround = false;
+		}
+	}
 
 	void Start ()
 	{
@@ -141,13 +152,48 @@ public class Player : MonoBehaviour
 
 		Actions.RemoveAll(x=> !x.IsActive && x.RemoveWhenFinished);
 		
-		 if (_contactPoint != null)
+#if UNITY_EDITOR
+		if (_contactPoint != null)
 		{
 			Debug.DrawRay(_contactPoint.Value.point, _contactPoint.Value.normal * 10, Color.white);
 			Debug.DrawRay(_contactPoint.Value.point, new Vector3(_speed.x, _speed.y,0) * 1, Color.yellow);
-
 		}
 
+		Debug.DrawRay(barrelRigidBody.transform.position, _specialForce * 20.0f, Color.red);
+
+#endif
+
+	}
+
+	void FixedUpdate()
+	{
+		if (OnTheGround)
+		{
+			_specialForce = Camera.main.transform.right * Mathf.Sign (Game.Instance.CameraZ);
+			float forceMag =  Mathf.Abs(Game.Instance.CameraZ) / Game.Instance.maxRotation;
+			_specialForce *= forceMag * Game.Instance.specialForceMax;
+			barrelRigidBody.AddForce(_specialForce);
+
+			barrelRigidBody.drag = 0;
+
+			Debug.Log ("Applying " + _specialForce.magnitude);
+		}
+		else
+		{
+//			//simulate ait resitance
+//			Vector3 vel = barrelRigidBody.velocity;
+//			vel.x *= 0.9f;
+//
+//			barrelRigidBody.velocity = vel;
+
+
+			if (Mathf.Abs(barrelRigidBody.velocity.x) > 3)
+			{
+				_specialForce = new Vector3(-Mathf.Sign(barrelRigidBody.velocity.x) * Game.Instance.specialAirForce, 0,0);
+				barrelRigidBody.AddForce(_specialForce);
+				Debug.Log ("NOT Applying ");
+			}
+		}
 	}
 
 

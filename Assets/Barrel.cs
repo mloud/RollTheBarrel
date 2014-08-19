@@ -11,4 +11,11 @@ public class Barrel : MonoBehaviour
 		player.OnCustomCollisionEnter(collision);
 	}
 
+	void OnCollisionExit(Collision collision)
+	{
+		player.OnCustomCollisionExit(collision);
+	}
+
+
+
 }

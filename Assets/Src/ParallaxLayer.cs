@@ -29,9 +29,6 @@ public class ParallaxLayer : MonoBehaviour
 
 	public void Set(Vector2 distance)
 	{
-		Debug.Log ("Distance: "  + distance.ToString());
 		renderer.material.mainTextureOffset = (distance / 100) * Speed;
-		//renderer.material.mainTextureOffset =  new Vector2(Random.Range(0,1),0);
-
 	}
 }
