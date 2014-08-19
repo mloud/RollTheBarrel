@@ -117,6 +117,10 @@ public class Player : MonoBehaviour
 
 			AddAction(action);
 		}
+		else if (collider.tag == "Lift")
+		{
+			OnTerrain = true;
+		}
 
 
 	}
@@ -136,6 +140,10 @@ public class Player : MonoBehaviour
 			OnTerrain = true;
 			ResolveTerrainContact(collision);
 		}
+		else if (collision.collider.gameObject.tag == "Lift")
+		{
+			OnTerrain = true;
+		}
 	}
 
 	public void OnCustomCollisionExit(Collision collision)
@@ -143,7 +151,6 @@ public class Player : MonoBehaviour
 		if (collision.collider.gameObject.tag == "Terrain")
 		{
 			OnTerrain = false;
-
 		}
 	}
 
