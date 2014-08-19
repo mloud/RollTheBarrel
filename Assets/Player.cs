@@ -26,9 +26,9 @@ public class Player : MonoBehaviour
 #if UNITY_EDITOR
 	ContactPoint? _contactPoint;
 	Vector3 _speed;
-	Vector3 _specialForce;
 #endif
 
+	Vector3 _specialForce;
 	private bool OnTerrain { get; set; }
 
 	void Awake()

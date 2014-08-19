@@ -31,7 +31,7 @@ public class InputController : MonoBehaviour
 		{
 			if (Input.touches[i].phase == TouchPhase.Began)
 			{
-				if (Input.touches[i].position.y > Screen.height * 0.5)
+				if (Input.touches[i].position.y > Screen.height * 0.3)
 				{
 					DoAction();
 				}
