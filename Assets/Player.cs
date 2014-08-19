@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
 		if (OnTerrain)
 			return true;
 
-		if (Actions.Count > 0 && Actions[Actions.Count - 1].GetType() == typeof(Act.RopeAction))
+		if (Actions.Count > 0 && Actions[Actions.Count - 1].IsActive && Actions[Actions.Count - 1].GetType() == typeof(Act.RopeAction))
 			return true;
 
 		return false;
@@ -188,7 +188,8 @@ public class Player : MonoBehaviour
 		// wind force in the air
 		else
 		{
-			if (Mathf.Abs(barrelRigidBody.velocity.x) > 3)
+			Debug.Log (Mathf.Abs(barrelRigidBody.velocity.x).ToString());
+			if (Mathf.Abs(barrelRigidBody.velocity.x) > 1.0f)
 			{
 				_specialForce = new Vector3(-Mathf.Sign(barrelRigidBody.velocity.x) * Game.Instance.specialAirForce, 0,0);
 				barrelRigidBody.AddForce(_specialForce);
