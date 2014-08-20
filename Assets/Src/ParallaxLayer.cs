@@ -29,6 +29,6 @@ public class ParallaxLayer : MonoBehaviour
 
 	public void Set(Vector2 distance)
 	{
-		renderer.material.mainTextureOffset = (distance / 100) * Speed;
+		renderer.material.mainTextureOffset = new Vector2((distance.x / 100) * Speed,0);
 	}
 }
