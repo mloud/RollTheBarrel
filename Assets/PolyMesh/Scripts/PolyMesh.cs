@@ -43,7 +43,13 @@ public class PolyMesh : MonoBehaviour
 		}
 		return points;
 	}
-	
+
+	public void MakeMeshUnique()
+	{
+		GetComponent<MeshFilter>().mesh = null;
+		BuildMesh();
+	}
+
 	public void BuildMesh()
 	{
 		var points = GetEdgePoints();
