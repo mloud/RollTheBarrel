@@ -9,9 +9,30 @@ namespace GEd
 	public class PistonEditor : Editor
 	{
 
-		private Vector2 scrollPosition;
-		#region Inspector GUI
+		protected virtual void InitShared()
+		{
+			Piston myTarget = (Piston)target;
+			
+			
+			myTarget.CurrentMode = (Piston.Mode)EditorGUILayout.EnumPopup("Mode", myTarget.CurrentMode);
+			myTarget.Trigger = (Piston.TriggerType)EditorGUILayout.EnumPopup("TriggerType", myTarget.Trigger);
+			
+			
+			if (myTarget.Trigger == Piston.TriggerType.CustomTrigger)
+			{
+				myTarget.TriggerObject = (Trigger)EditorGUILayout.ObjectField( myTarget.TriggerObject, typeof(Trigger) );
+			}
 
+			if (myTarget.CurrentMode == Piston.Mode.Switching)
+			{
+				myTarget.StopDelayA = EditorGUILayout.FloatField("StopDurationA", myTarget.StopDelayA);
+				myTarget.StopDelayB = EditorGUILayout.FloatField("StopDurationB", myTarget.StopDelayB);
+			}
+
+		}
+
+
+		#region Inspector GUI
 		public override void OnInspectorGUI()
 		{
 			if (target == null)
@@ -19,25 +40,17 @@ namespace GEd
 
 			Piston myTarget = (Piston)target;
 
-			myTarget.CurrentMode = (Piston.Mode)EditorGUILayout.EnumPopup("Mode", myTarget.CurrentMode);
-			myTarget.Trigger = (Piston.TriggerType)EditorGUILayout.EnumPopup("TriggerType", myTarget.Trigger);
+			InitShared();
 
-			if (myTarget.Trigger == Piston.TriggerType.CustomTrigger)
-			{
-				myTarget.ActualTrigger = (Trigger)EditorGUILayout.ObjectField( myTarget.ActualTrigger, typeof(Trigger) );
-			}
-			
-			
 			myTarget.Direction = EditorGUILayout.Vector2Field("Direction", myTarget.Direction);
 			myTarget.Distance = EditorGUILayout.FloatField("Distance", myTarget.Distance);
 
-			if (myTarget.CurrentMode == Piston.Mode.Looping)
-			{
-				myTarget.StopDelay = EditorGUILayout.FloatField("StopDuration", myTarget.StopDelay);
-			}
 
-			myTarget.Speed = EditorGUILayout.FloatField("Speed", myTarget.Speed);
-			myTarget.StartOffset = EditorGUILayout.FloatField("StartDelay", myTarget.Speed);
+
+			myTarget.SpeedAB = EditorGUILayout.FloatField("SpeedAB", myTarget.SpeedAB);
+			myTarget.SpeedBA = EditorGUILayout.FloatField("SpeedBA", myTarget.SpeedBA);
+
+			myTarget.StartOffset = EditorGUILayout.FloatField("StartDelay", myTarget.StartOffset);
 
 			if (GUI.changed)
 			{
@@ -51,7 +64,7 @@ namespace GEd
 		
 		#region Scene GUI
 		
-		void OnSceneGUI()
+		protected void OnSceneGUI()
 		{
 			Piston myTarget = (Piston)target;
 			
@@ -62,8 +75,23 @@ namespace GEd
 			Handles.SphereCap(0, dstPos, Quaternion.identity, 1.0f);
 		}
 		#endregion
+	}
 
+	[CustomEditor(typeof(GatePiston))]
+	public class GatePistonEditor : PistonEditor
+	{
+		protected override void InitShared()
+		{
+			GatePiston gatePiston = (GatePiston)target;
+					
+			gatePiston.TriggerObject = (Trigger)EditorGUILayout.ObjectField( gatePiston.TriggerObject, typeof(Trigger) );
+		
+			gatePiston.StopDelayB = EditorGUILayout.FloatField("StopDurationB", gatePiston.StopDelayB);
+		}
+		
 
 	
 	}
+		
+
 }
