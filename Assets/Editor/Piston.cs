@@ -64,17 +64,6 @@ namespace GEd
 		#endregion
 
 
-
-		
-		#region Menu Items
-
-		[MenuItem("Editor/Add/trigger", false, 1000)]
-		static void AddTrigger()
-		{
-		}
-
-
-
-		#endregion
+	
 	}
 }
