@@ -10,9 +10,7 @@ public class Piston : MonoBehaviour
 		CustomTrigger
 	}
 
-	[SerializeField]
-	List<Trigger> Triggers;
-
+	public Trigger ActualTrigger;
 
 	public enum Mode
 	{
@@ -20,28 +18,20 @@ public class Piston : MonoBehaviour
 		Looping
 	}
 
-	[SerializeField]
-	TriggerType trigger;
 
-	[SerializeField]
-	Mode mode;
+	public TriggerType Trigger;
 
+	public Mode CurrentMode;
 
-	[SerializeField]
-	float distance;
+	public float Distance;
 
-	[SerializeField]
-	Vector2 direction;
+	public Vector2 Direction;
 
-
-	[SerializeField]
-	float stopDelay; // just when looping
+	public float StopDelay; // just when looping
 	
-	[SerializeField]
-	float speed;
+	public float Speed;
 
-	[SerializeField]
-	float startOffset;
+	public float StartOffset;
 
 
 	private enum State
@@ -60,10 +50,10 @@ public class Piston : MonoBehaviour
 	public void Start ()
 	{
 		// register to trigger
-		for (int i = 0; i < Triggers.Count; ++i)
+		if (ActualTrigger)
 		{
-			Triggers[i].OnTriggerEnterDelegates += OnConnectedTriggerEnter;
-			Triggers[i].OnTriggerExitDelegates += OnConnectedTriggerExit;
+			ActualTrigger.OnTriggerEnterDelegates += OnConnectedTriggerEnter;
+			ActualTrigger.OnTriggerExitDelegates += OnConnectedTriggerExit;
 		}
 
 		// in stop state 
@@ -71,27 +61,26 @@ public class Piston : MonoBehaviour
 		CurrentState = State.Stopped;
 
 		// schedule start
-		if (trigger == TriggerType.GameStart)
+		if (Trigger == TriggerType.GameStart)
 		{
-			Timer = Time.time + startOffset;
+			Timer = Time.time + StartOffset;
 		}
 	}
 
 
 	void OnDestroy()
 	{
-		// unregister from trigger
-		for (int i = 0; i < Triggers.Count; ++i)
+		if (ActualTrigger)
 		{
-			Triggers[i].OnTriggerEnterDelegates -= OnConnectedTriggerEnter;
-			Triggers[i].OnTriggerExitDelegates -= OnConnectedTriggerExit;
+			// unregister from trigger
+			ActualTrigger.OnTriggerEnterDelegates -= OnConnectedTriggerEnter;
+			ActualTrigger.OnTriggerExitDelegates -= OnConnectedTriggerExit;
 		}
-
 	}
 
 	void EnterLiftState()
 	{
-		DstPosition = transform.position + new Vector3(direction.x, direction.y).normalized * distance;
+		DstPosition = transform.position + new Vector3(Direction.x, Direction.y).normalized * Distance;
 
 		CurrentState = State.Moving;
 	}
@@ -105,9 +94,9 @@ public class Piston : MonoBehaviour
 	
 
 		// schedule next lift
-		if (mode == Mode.Looping)
+		if (CurrentMode == Mode.Looping)
 		{
-			Timer = Time.time + stopDelay;
+			Timer = Time.time + StopDelay;
 		}
 		// stay stopped
 		else
@@ -134,12 +123,12 @@ public class Piston : MonoBehaviour
 	
 	private void UpdateLiftState()
 	{
-		transform.position += Time.deltaTime * speed * (DstPosition.Value - transform.position).normalized;
+		transform.position += Time.deltaTime * Speed * (DstPosition.Value - transform.position).normalized;
 			
 		if ( (transform.position - DstPosition.Value).sqrMagnitude < 0.1f * 0.1f)
 		{
 				EnterStopState();
-				direction *= -1;
+				Direction *= -1;
 		}
 	}
 	
@@ -171,16 +160,4 @@ public class Piston : MonoBehaviour
 			return;
 
 	}
-
-
-	#if UNITY_EDITOR
-	void OnDrawGizmos()
-	{
-		Gizmos.color = Color.yellow;
-		Vector3 dstPos = transform.position +  new Vector3(direction.x, direction.y).normalized * distance;
-		Gizmos.DrawLine(transform.position, dstPos);
-		Gizmos.DrawSphere(dstPos, 0.5f);
-	}
-	#endif
-	
 }
