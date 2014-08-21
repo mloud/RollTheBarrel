@@ -11,7 +11,7 @@ public class Wheel : MonoBehaviour {
 	
 	}
 	
-	void Update () 
+	void FixedUpdate () 
 	{
 		//transform.Rotate(new Vector3(0,0,speed * Time.deltaTime), Space.Self);
 		//rigidbody.AddTorque(new Vector3(0, 0, speed), ForceMode.Force);

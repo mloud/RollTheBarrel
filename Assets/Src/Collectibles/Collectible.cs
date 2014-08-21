@@ -30,16 +30,20 @@ public class Collectible : CollectibleBase
 				Destroy (gameObject);
 			}
 		}
+	
 	}
 
 #if UNITY_EDITOR
 	void OnDrawGizmos()
 	{
-		if (player == null)
+		if (false)
 		{
-			player = GameObject.FindObjectOfType<Player>();
+			if (player == null)
+			{
+				player = GameObject.FindObjectOfType<Player>();
+			}
+			Gizmos.DrawWireSphere(transform.position, player.GetTrunkSize());
 		}
-		Gizmos.DrawWireSphere(transform.position, player.GetTrunkSize());
 	}
 #endif
 
