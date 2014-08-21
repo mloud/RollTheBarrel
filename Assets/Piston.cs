@@ -10,12 +10,13 @@ public class Piston : MonoBehaviour
 		CustomTrigger
 	}
 
-	public Trigger ActualTrigger;
+	public Trigger TriggerObject;
+
 
 	public enum Mode
 	{
 		Once,
-		Looping
+		Switching
 	}
 
 
@@ -27,38 +28,44 @@ public class Piston : MonoBehaviour
 
 	public Vector2 Direction;
 
-	public float StopDelay; // just when looping
+	public float StopDelayA; // just when looping
+	public float StopDelayB; // just when looping
+
 	
-	public float Speed;
+	public float SpeedAB;
+	public float SpeedBA;
+
 
 	public float StartOffset;
 
 
-	private enum State
+	protected enum State
 	{
-		Stopped,
-		Moving
+		StoppedA,
+		StoppedB,
+		MovingAB,
+		MovingBA
 	}
 	
-	State CurrentState { get; set; }
-	float Timer { get; set; }
-	bool Disabled { get; set; }
+	protected State CurrentState { get; set; }
+	protected float Timer { get; set; }
+	protected bool Disabled { get; set; }
 
 
-	private Vector3? DstPosition;
+	protected Vector3? DstPosition;
 
-	public void Start ()
+	public virtual void Start ()
 	{
 		// register to trigger
-		if (ActualTrigger)
+		if (TriggerObject)
 		{
-			ActualTrigger.OnTriggerEnterDelegates += OnConnectedTriggerEnter;
-			ActualTrigger.OnTriggerExitDelegates += OnConnectedTriggerExit;
+			TriggerObject.OnTriggerEnterDelegates += OnConnectedTriggerEnter;
+			TriggerObject.OnTriggerExitDelegates += OnConnectedTriggerExit;
 		}
 
 		// in stop state 
 		Timer = -1;
-		CurrentState = State.Stopped;
+		CurrentState = State.StoppedA;
 
 		// schedule start
 		if (Trigger == TriggerType.GameStart)
@@ -68,35 +75,52 @@ public class Piston : MonoBehaviour
 	}
 
 
-	void OnDestroy()
+	protected virtual void OnDestroy()
 	{
-		if (ActualTrigger)
+		if (TriggerObject)
 		{
 			// unregister from trigger
-			ActualTrigger.OnTriggerEnterDelegates -= OnConnectedTriggerEnter;
-			ActualTrigger.OnTriggerExitDelegates -= OnConnectedTriggerExit;
+			TriggerObject.OnTriggerEnterDelegates -= OnConnectedTriggerEnter;
+			TriggerObject.OnTriggerExitDelegates -= OnConnectedTriggerExit;
 		}
 	}
 
-	void EnterLiftState()
+	protected virtual void EnterLiftState()
 	{
-		DstPosition = transform.position + new Vector3(Direction.x, Direction.y).normalized * Distance;
+		Vector3 dstVector = new Vector3(Direction.x, Direction.y).normalized * Distance;
 
-		CurrentState = State.Moving;
+		if (CurrentState == State.StoppedA)
+		{
+			CurrentState = State.MovingAB;
+			DstPosition = transform.position + dstVector;
+		}
+		else if (CurrentState == State.StoppedB)
+		{
+			CurrentState = State.MovingBA;
+			DstPosition = transform.position - dstVector;
+		}
 	}
 
 
-	void EnterStopState()
+	protected virtual void EnterStopState()
 	{
 		transform.position = DstPosition.Value;
 
-		CurrentState =  State.Stopped;
-	
+		if (CurrentState == State.MovingAB)
+		{
+			CurrentState =  State.StoppedB;
+		}
+		else if (CurrentState == State.MovingBA)
+		{
+			CurrentState = State.StoppedA;
+		}
 
 		// schedule next lift
-		if (CurrentMode == Mode.Looping)
+		if (CurrentMode == Mode.Switching)
 		{
-			Timer = Time.time + StopDelay;
+			float stopDelay = CurrentState == State.StoppedA ? StopDelayA : StopDelayB;
+
+			Timer = Time.time + stopDelay;
 		}
 		// stay stopped
 		else
@@ -107,32 +131,42 @@ public class Piston : MonoBehaviour
 
 	}
 
-	void Update () 
+	protected virtual void Update () 
 	{
+
 		switch (CurrentState)
 		{
-		case State.Stopped:
+		case State.StoppedA:
 			UpdateStopState();
 			break;
-			
-		case State.Moving:
+	
+		case State.StoppedB:
+			UpdateStopState();
+			break;
+
+		case State.MovingAB:
 			UpdateLiftState();
 			break;
+	
+		case State.MovingBA:
+			UpdateLiftState();
+		break;
+
 		}
 	}
 	
-	private void UpdateLiftState()
+	protected virtual void UpdateLiftState()
 	{
-		transform.position += Time.deltaTime * Speed * (DstPosition.Value - transform.position).normalized;
+		float speed = CurrentState == State.MovingAB ? SpeedAB : SpeedBA;
+		transform.position += Time.deltaTime * speed * (DstPosition.Value - transform.position).normalized;
 			
 		if ( (transform.position - DstPosition.Value).sqrMagnitude < 0.1f * 0.1f)
 		{
-				EnterStopState();
-				Direction *= -1;
+			EnterStopState();
 		}
 	}
 	
-	private void UpdateStopState()
+	protected virtual void UpdateStopState()
 	{
 		if (Timer != -1 && Time.time > Timer)
 		{
@@ -142,19 +176,23 @@ public class Piston : MonoBehaviour
 	}
 	
 
-	void OnConnectedTriggerEnter(Trigger trigger, Collider collider)
+	protected virtual void OnConnectedTriggerEnter(Trigger trigger, Collider collider)
 	{
 		if (Disabled)
 			return;
 
-		if (CurrentState == State.Stopped)
+		if (CurrentState == State.StoppedA || CurrentState == State.StoppedB)
 		{
 			Timer = Time.time;
-			Disabled = true;
+
+			if (CurrentMode == Mode.Once)
+			{
+				Disabled = true;
+			}
 		}
 	}
 	
-	void OnConnectedTriggerExit(Trigger trigger, Collider collider)
+	protected virtual void OnConnectedTriggerExit(Trigger trigger, Collider collider)
 	{
 		if (Disabled)
 			return;

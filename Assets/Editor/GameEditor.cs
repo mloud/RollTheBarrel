@@ -11,6 +11,7 @@ namespace GEd
 		public enum ItemType
 		{
 			KillerPiston,
+			GatePiston,
 			Trigger,
 			Jumper,
 			Wheel,
@@ -46,6 +47,15 @@ namespace GEd
 			item.Delegate = AddPiston;
 
 			ItemDb.Add(item);
+
+
+			// Gate Piston
+			item = new Item();
+			item.Name = ItemType.GatePiston.ToString();
+			item.Delegate = AddGatePiston;
+			
+			ItemDb.Add(item);
+
 
 			// Trigger
 			item = new Item();
@@ -117,6 +127,16 @@ namespace GEd
 		
 			PostProcess(go);
 
+			return go;
+		}
+
+		[MenuItem("Editor/Add/GatePiston", false, 1000)]
+		static GameObject AddGatePiston()
+		{
+			GameObject go = Instantiate(Resources.Load("Elements/Obstacles/GatePiston")) as GameObject;
+			
+			PostProcess(go);
+			
 			return go;
 		}
 
